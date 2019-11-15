@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score Card</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="scoreCard.js" defer></script>
+    <style>
+        .container{
+            display: flex;
+        }
+        .namelist{
+            margin-top: 20px;
+            margin-right: 30px;
+        }
+        .namebox{
+            height: 30px;
+        }
+        .box{
+            display: flex;
+        }
+        .column{
+            margin-right: 10px;
+        }
+        .minibox{
+            border:  1px solid;
+            width: 30px;
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <select id="mycourses" onchange="getcourse(this.value)">
+
+    </select>
+    <select id="mytees" onchange="setTee(this.value)">
+
+        </select>
+
+    <div class="container">
+        <div class="namelist">
+            <span></span>
+        </div>
+        <div class="box">
+
+        </div>
+    </div>
+    <button onclick="addplayer()">Add Player</button>
+</body>
+</html>
