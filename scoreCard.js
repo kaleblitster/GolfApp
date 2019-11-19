@@ -41,14 +41,38 @@ function setTee(teeid){
 buildcol();
 function buildcol() {
     for (let c = 1; c <= numholes; c++){
-        $('.box').append(`<div id="col${c}" class="column">${c}</div>`)
+        $('.box').append(`<div id="col${c}" class="column">${c}</div>`);
+        if(c === 9){
+            $('.box').append(`<div id="nineHoleScore" class="column">Out</div>`);
+            console.log("hello");
+        }
+        if(c === 18){
+            $('.box').append(`<div id="backNineScore" class="column">In</div>`);
+            console.log("hello");
+        }
+        if(c === 18){
+            $('.box').append(`<div id="totalScore" class="column">Total</div>`);
+            console.log("hello");
+        }
     }
     //buildholes();
 }
 
 function buildholes() {
     for (let h = 1; h <= numholes; h++){
-        $('#col' + h).append(`<div id="p${numblayers}h${h}" class="minibox"><input style="width: 24px; height: 24px;"></input></div>`);
+        $('#col' + h).append(`<div id="p${numblayers}h${h}" class="minibox" style="margin-bottom: 3px"><input style="width: 24px; height: 24px; "></div>`);
+        if(h === 9){
+            $('#nineHoleScore').append(`<div id="p${numblayers}h${h}" class="minibox" style="width: 60px; height: 30px"></div>`);
+            console.log("hello");
+        }
+        if(h === 18){
+            $('#backNineScore').append(`<div id="p${numblayers}h${h}" class="minibox" style="width: 60px; height: 30px"></div>`);
+            console.log("hello");
+        }
+        if(h === 18){
+            $('#totalScore').append(`<div id="p${numblayers}h${h}" class="minibox" style="width: 60px; height: 30px"></div>`);
+            console.log("hello");
+        }
     } 
     $('.minibox').keyup(function(){
         console.log($(this).attr('id'));
@@ -59,5 +83,5 @@ function buildholes() {
 function addplayer(){
     numblayers++;
     buildholes();
-    $('.namelist').append(`<div class='namebox' contenteditable='true'><input placeholder='Player Name'></input></div>`)
+    $('.namelist').append(`<div class='namebox' contenteditable='true'><input placeholder='Player Name'></div>`)
 }
