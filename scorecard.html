@@ -33,11 +33,12 @@
         }
     </style>
 </head>
-<body>
+<body onload="loadCourse()">
 
-    <select id="mycourses" onchange="getcourse(this.value)">
 
-    </select>
+    <div id="mycourses" onload="loadDoc()">
+
+    </div>
     <select id="mytees" onchange="setTee(this.value)">
 
         </select>
