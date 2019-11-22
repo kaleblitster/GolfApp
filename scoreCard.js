@@ -5,6 +5,7 @@ let mycourse=localStorage.getItem("courseid");
 let mytee=0;
 let teetypesloaded=0;
 let teetypes = 4;
+let totalYards=0;
 let course;
 
 //
@@ -67,32 +68,41 @@ function buildcol() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
+            course = JSON.parse(this.responseText);
             $('#box').append(`<tr id='yards'><td>Yardage:</td></tr>`);
             $('#box').append(`<tr id='par'><td>Par:</td></tr>`);
             $('#box').append(`<tr id='hcp'><td>Handicap:</td></tr>`);
-            course = JSON.parse(this.responseText);
             for (i = 0; i < 21; i++){
                 if (i < 9) {
                     $('#yards').append(`<td id="yards${i+1}">${course.data.holes[i].teeBoxes[mytee].yards}</td>`);
+                    totalYards+=parseInt(course.data.holes[i].teeBoxes[mytee].yards);
                     $('#par').append(`<td id="pars"+(i+1)>${course.data.holes[i].teeBoxes[mytee].par}</td>`)
                     $('#hcp').append(`<td id="handicap${i+1}">${course.data.holes[i].teeBoxes[mytee].hcp}</td>`);
                 }
                 if (i == 9){
                     $('#yards').append(`<td id="yardsIn"></td>`);
+                    totalYards+=parseInt(course.data.holes[i].teeBoxes[mytee].yards);
                     $('#par').append(`<td id="parsIn"></td>`);
                     $('#hcp').append(`<td id="handicapIn"></td>`);
 
                 }
                 if (i > 8 && i < 18){
                     $('#yards').append(`<td id="yards${i+1}">${course.data.holes[i].teeBoxes[mytee].yards}</td>`);
+                    if (i != 18 && i > 9){
+                        totalYards+=parseInt(course.data.holes[i].teeBoxes[mytee].yards);
+                    }
                     $('#par').append(`<td id="pars"+(i+1)>${course.data.holes[i].teeBoxes[mytee].par}</td>`)
                     $('#hcp').append(`<td id="handicap${i+1}">${course.data.holes[i].teeBoxes[mytee].hcp}</td>`);
 
                 }
-                if (i == 18 || i == 19){
-                    $('#yards').append(`<td id="yardsOut"></td>`);
+                if (i == 18){
+                    $('#yards').append(`<td id="yardsOut${totalYards}"></td>`);
                     $('#par').append(`<td id="pars"></td>`);
                     $('#hcp').append(`<td id="handicap"></td>`);
+
+                }
+                if (i == 19){
+                    $('#yards').append(`<td id="yardsTotal">${totalYards}</td>`);
 
                 }
             }
