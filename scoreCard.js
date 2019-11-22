@@ -2,9 +2,10 @@ let numblayers = 4;
 let numholes = 18;
 let allcourses;
 let mycourse=localStorage.getItem("courseid");
-let mytee;
+let mytee=0;
 let teetypesloaded=0;
 let teetypes = 4;
+let course;
 
 //
 
@@ -13,12 +14,17 @@ function loadDoc() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
+
             allcourses = JSON.parse(this.responseText);
-            console.log(allcourses.courses[1].name);
+            console.log('#holes');
             for(let i = 0; i < allcourses.courses.length; i++){
                 if(allcourses.courses[i].id==mycourse){
                     $('#mycourses').html(allcourses.courses[i].name);
                 }
+            }
+            //the 20 in the for loop is to make 21 columns. 18 holes, and 3 extra boxes (in, out, total).
+            for (i = 0; i < 20; i++){
+                if (i < 8){}
             }
 
         }
@@ -26,13 +32,11 @@ function loadDoc() {
     xhttp.open("GET", "https://golf-courses-api.herokuapp.com/courses", true);
     xhttp.send();
   }
-
+  getcourse(mycourse);
   function getcourse(theid) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-
-
             mycourse = JSON.parse(this.responseText);
             if(teetypesloaded==0) {
                 for (let i = 0; i < teetypes; i++) {
@@ -46,40 +50,97 @@ function loadDoc() {
     xhttp.send();
   }
 
-function setTee(teeid){
-    mytee = teeid;
-    //buildcol();
-}
-
 buildcol();
 function buildcol() {
+    $('#box').html(`<tr id='holes'></tr>`);
+    $('#holes').append(`<td  class="column">Holes:</td>`);
     for (let c = 1; c <= numholes; c++){
-        $('.box').append(`<div id="col${c}" class="column">${c}</div>`);
+        $('#holes').append(`<td id="col${c}" class="column">${c}</td>`);
         if(c === 9){
-            $('.box').append(`<div id="nineHoleScore" class="column">Out</div>`);
+            $('#holes').append(`<td id="nineHoleScore" class="column" style="width: 60px; height: 30px">Out</td>`);
         }
         if(c === 18){
-            $('.box').append(`<div id="backNineScore" class="column">In</div>`);
-        }
-        if(c === 18){
-            $('.box').append(`<div id="totalScore" class="column">Total</div>`);
+            $('#holes').append(`<td id="backNineScore" class="column" style="width: 60px; height: 30px">In</td>`);
+            $('#holes').append(`<td id="totalScore" class="column" style="width: 60px; height: 30px">Total</td>`);
         }
     }
-    //buildholes();
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            $('#box').append(`<tr id='yards'><td>Yardage:</td></tr>`);
+            $('#box').append(`<tr id='par'><td>Par:</td></tr>`);
+            $('#box').append(`<tr id='hcp'><td>Handicap:</td></tr>`);
+            course = JSON.parse(this.responseText);
+            for (i = 0; i < 21; i++){
+                if (i < 9) {
+                    $('#yards').append(`<td id="yards${i+1}">${course.data.holes[i].teeBoxes[mytee].yards}</td>`);
+                    $('#par').append(`<td id="pars"+(i+1)>${course.data.holes[i].teeBoxes[mytee].par}</td>`)
+                    $('#hcp').append(`<td id="handicap${i+1}">${course.data.holes[i].teeBoxes[mytee].hcp}</td>`);
+                }
+                if (i == 9){
+                    $('#yards').append(`<td id="yardsIn"></td>`);
+                    $('#par').append(`<td id="parsIn"></td>`);
+                    $('#hcp').append(`<td id="handicapIn"></td>`);
+
+                }
+                if (i > 8 && i < 18){
+                    $('#yards').append(`<td id="yards${i+1}">${course.data.holes[i].teeBoxes[mytee].yards}</td>`);
+                    $('#par').append(`<td id="pars"+(i+1)>${course.data.holes[i].teeBoxes[mytee].par}</td>`)
+                    $('#hcp').append(`<td id="handicap${i+1}">${course.data.holes[i].teeBoxes[mytee].hcp}</td>`);
+
+                }
+                if (i == 18 || i == 19){
+                    $('#yards').append(`<td id="yardsOut"></td>`);
+                    $('#par').append(`<td id="pars"></td>`);
+                    $('#hcp').append(`<td id="handicap"></td>`);
+
+                }
+            }
+        }
+    };
+    xhttp.open("GET", "https://golf-courses-api.herokuapp.com/courses/" + mycourse, true);
+    xhttp.send();
 }
 
+
+
+function pageUpdater() {
+    mycourse=localStorage.getItem("courseid");
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+
+            allcourses = JSON.parse(this.responseText);
+            for (i = 0; i < 18; i++){
+                $('#yards' + i).html(allcourses.data.holes[i].teeBoxes[mytee].yards);
+            }
+        }
+    };
+    console.log(mycourse);
+    xhttp.open("GET", "https://golf-courses-api.herokuapp.com/courses/" + mycourse, true);
+    xhttp.send();
+}
+function setTee(teeid){
+    mytee = teeid;
+    pageUpdater();
+}
+
+
+//totally playa related below
 function buildholes() {
-    for (let h = 1; h <= numholes; h++){
-        $('#col' + h).append(`<div id="p${numblayers}h${h}" class="minibox" style="margin-bottom: 3px"><input style="width: 24px; height: 24px; "></div>`);
-        if(h === 9){
-            $('#nineHoleScore').append(`<div id="p${numblayers}h${h}" class="minibox" style="width: 60px; height: 30px"></div>`);
+    $('#box').append(`<tr id="playerRow"></tr>`);
+
+    $("#playerRow").append(`<td class='namebox' contenteditable='true' ><input placeholder='Player Name'></td>`)
+    for (let h = 1; h <= 21; h++){
+        $('#playerRow').append(`<td id="p${numblayers}h${h}" class="minibox" style="margin-bottom: 3px"><input style="width: 24px; height: 24px; "></td>`);
+        /*if(h === 9){
+            $('#nineHoleScore').append(`<td id="p${numblayers}h${h}" class="minibox" style="width: 60px; height: 30px"></td>`);
         }
         if(h === 18){
-            $('#backNineScore').append(`<div id="p${numblayers}h${h}" class="minibox" style="width: 60px; height: 30px"></div>`);
-        }
-        if(h === 18){
-            $('#totalScore').append(`<div id="p${numblayers}h${h}" class="minibox" style="width: 60px; height: 30px"></div>`);
-        }
+            $('#backNineScore').append(`<td id="p${numblayers}h${h}" class="minibox" style="width: 60px; height: 30px"></td>`);
+
+            $('#totalScore').append(`<td id="p${numblayers}h${h}" class="minibox" style="width: 60px; height: 30px"></td>`);
+        }*/
     } 
     $('.minibox').keyup(function(){
         console.log($(this).attr('id'));
@@ -90,10 +151,9 @@ function buildholes() {
 function addplayer(){
     numblayers++;
     buildholes();
-    $('.namelist').append(`<div class='namebox' contenteditable='true'><input placeholder='Player Name'></div>`)
 }
 
 function loadCourse() {
     mycourse = localStorage.getItem('courseid');
-    addplayer();
+    //addplayer();
 }
