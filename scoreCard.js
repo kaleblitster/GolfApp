@@ -1,4 +1,4 @@
-let numblayers = 4;
+let numbplayers = 4;
 let numholes = 18;
 let allcourses;
 let mycourse=localStorage.getItem("courseid");
@@ -6,8 +6,11 @@ let mytee=0;
 let teetypesloaded=0;
 let teetypes = 4;
 let totalYards=0;
+let totalPar = 0;
+let inYardage = 0;
 let course;
-
+let name;
+let playercounter=0;
 //
 
 loadDoc();
@@ -17,7 +20,6 @@ function loadDoc() {
       if (this.readyState == 4 && this.status == 200) {
 
             allcourses = JSON.parse(this.responseText);
-            console.log('#holes');
             for(let i = 0; i < allcourses.courses.length; i++){
                 if(allcourses.courses[i].id==mycourse){
                     $('#mycourses').html(allcourses.courses[i].name);
@@ -53,6 +55,9 @@ function loadDoc() {
 
 buildcol();
 function buildcol() {
+    let totalYards=0;
+    let totalPar = 0;
+    let inYardage = 0;
     $('#box').html(`<tr id='holes'></tr>`);
     $('#holes').append(`<td  class="column">Holes:</td>`);
     for (let c = 1; c <= numholes; c++){
@@ -76,34 +81,42 @@ function buildcol() {
                 if (i < 9) {
                     $('#yards').append(`<td id="yards${i+1}">${course.data.holes[i].teeBoxes[mytee].yards}</td>`);
                     totalYards+=parseInt(course.data.holes[i].teeBoxes[mytee].yards);
-                    $('#par').append(`<td id="pars"+(i+1)>${course.data.holes[i].teeBoxes[mytee].par}</td>`)
+                    $('#par').append(`<td id="pars${i+1}">${course.data.holes[i].teeBoxes[mytee].par}</td>`);
+                    totalPar+=parseInt(course.data.holes[i].teeBoxes[mytee].par);
                     $('#hcp').append(`<td id="handicap${i+1}">${course.data.holes[i].teeBoxes[mytee].hcp}</td>`);
                 }
                 if (i == 9){
-                    $('#yards').append(`<td id="yardsIn"></td>`);
+                    $('#yards').append(`<td id="yardsOut">${totalYards}</td>`);
                     totalYards+=parseInt(course.data.holes[i].teeBoxes[mytee].yards);
-                    $('#par').append(`<td id="parsIn"></td>`);
-                    $('#hcp').append(`<td id="handicapIn"></td>`);
+                    $('#par').append(`<td id="parsOut">${totalPar}</td>`);
+                    totalPar+=parseInt(course.data.holes[i].teeBoxes[mytee].par);
+                    $('#hcp').append(`<td id="handicapOut"></td>`);
 
                 }
                 if (i > 8 && i < 18){
                     $('#yards').append(`<td id="yards${i+1}">${course.data.holes[i].teeBoxes[mytee].yards}</td>`);
-                    if (i != 18 && i > 9){
+
                         totalYards+=parseInt(course.data.holes[i].teeBoxes[mytee].yards);
+                        inYardage+=parseInt(course.data.holes[i].teeBoxes[mytee].yards);
+
+
+                    $('#par').append(`<td id="pars${i+1}">${course.data.holes[i].teeBoxes[mytee].par}</td>`);
+                    if (i != 18 && i > 9) {
+                        totalPar += parseInt(course.data.holes[i].teeBoxes[mytee].par);
                     }
-                    $('#par').append(`<td id="pars"+(i+1)>${course.data.holes[i].teeBoxes[mytee].par}</td>`)
                     $('#hcp').append(`<td id="handicap${i+1}">${course.data.holes[i].teeBoxes[mytee].hcp}</td>`);
 
                 }
                 if (i == 18){
-                    $('#yards').append(`<td id="yardsOut${totalYards}"></td>`);
-                    $('#par').append(`<td id="pars"></td>`);
-                    $('#hcp').append(`<td id="handicap"></td>`);
+                    $('#yards').append(`<td id="yardsIn">${inYardage}</td>`);
+                    $('#par').append(`<td id="parsIn">${totalPar}</td>`);
+                    $('#hcp').append(`<td id="handicapIn"></td>`);
 
                 }
                 if (i == 19){
                     $('#yards').append(`<td id="yardsTotal">${totalYards}</td>`);
-
+                    $('#par').append(`<td id="parsTotal">${totalPar}</td>`);
+                    $('#hcp').append(`<td id="handicapTotal"></td>`);
                 }
             }
         }
@@ -123,6 +136,8 @@ function pageUpdater() {
             allcourses = JSON.parse(this.responseText);
             for (i = 0; i < 18; i++){
                 $('#yards' + i).html(allcourses.data.holes[i].teeBoxes[mytee].yards);
+                $('#par' + i).html(allcourses.data.holes[i].teeBoxes[mytee].par);
+                $('#hcp' + i).html(allcourses.data.holes[i].teeBoxes[mytee].hcp);
             }
         }
     };
@@ -138,32 +153,75 @@ function setTee(teeid){
 
 //totally playa related below
 function buildholes() {
-    $('#box').append(`<tr id="playerRow"></tr>`);
+    $('#box').append(`<tr id="playerRow${playercounter}"></tr>`);
 
-    $("#playerRow").append(`<td class='namebox' contenteditable='true' ><input placeholder='Player Name'></td>`)
-    for (let h = 1; h <= 21; h++){
-        $('#playerRow').append(`<td id="p${numblayers}h${h}" class="minibox" style="margin-bottom: 3px"><input style="width: 24px; height: 24px; "></td>`);
-        /*if(h === 9){
-            $('#nineHoleScore').append(`<td id="p${numblayers}h${h}" class="minibox" style="width: 60px; height: 30px"></td>`);
+    $("#playerRow"+playercounter).append(`<td class='namebox' contenteditable='true' >${name}</td>`);
+    for (let h = 0; h < 23; h++){
+       if(h<9)
+        $('#playerRow'+playercounter).append(`<td class="minibox" style="margin-bottom: 3px">
+        <input id="${name}${h+1}"  type="text" onkeypress="isInputNumber(event)" style="height: 24px; width: 24px"></td>`);
+        if(h>9 && h<19)
+            $('#playerRow'+playercounter).append(`<td   class="minibox" style="margin-bottom: 3px">
+        <input id="${name}${h}" type="text" onkeypress="isInputNumber(event)" style="height: 24px; width: 24px"></td>`);
+
+        if (h == 9){
+            $('#playerRow'+playercounter).append(`<td id="${name}out" class="minibox" style="margin-bottom: 3px"><output></output></td>`);
         }
-        if(h === 18){
-            $('#backNineScore').append(`<td id="p${numblayers}h${h}" class="minibox" style="width: 60px; height: 30px"></td>`);
-
-            $('#totalScore').append(`<td id="p${numblayers}h${h}" class="minibox" style="width: 60px; height: 30px"></td>`);
-        }*/
+        if (h == 18){
+            $('#playerRow'+playercounter).append(`<td id="${name}${h}" class="minibox" style="margin-bottom: 3px"><output></output></td>`);
+        }
+        if (h >18){
+            $('#playerRow'+playercounter).append(`<td id="${name}${h}" class="minibox" style="margin-bottom: 3px"><output></output></td>`);
+            playercounter++;
+            break;
+        }
     } 
     $('.minibox').keyup(function(){
         console.log($(this).attr('id'));
     });
 }
 
+function isInputNumber(evt) { //this function only allows players to input a number value for a score.
+    var ch = String.fromCharCode(evt.which);
 
-function addplayer(){
-    numblayers++;
-    buildholes();
+    if (!(/[0-9]/.test(ch))){
+        evt.preventDefault();
+        alert('Please enter a number value');
+    }
 }
+
+// function calc() {
+//     let a = document.getElementById("box${i+1}").value;
+//     let b = document.getElementById("box${i+1}").value;
+//     let res = document.getElementById("resultbox");
+//
+//     let answer = Number(a) + Number(b);
+//     res.innerHTML = answer;
+// }
+
+function addplayer(event){
+    if(event.which==13){
+        console.log(event);
+        if (playercounter !=numbplayers) {
+            name = $('#addplayerbutton').val();
+            buildholes();
+            $('#addplayerbutton').val('');
+        }
+        else alert("sorry only four players allowed per sheet.")
+    }
+}
+
+//
+// class Player{
+//     constructor(name){
+//         this.name=name;
+//         this.id=playerCount;
+//         playerCount++;
+//         players.push(this)
+//     }
+// }
+
 
 function loadCourse() {
     mycourse = localStorage.getItem('courseid');
-    //addplayer();
 }

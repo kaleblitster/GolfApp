@@ -1,5 +1,27 @@
+body{
+    background-image: url("golf.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.everything{
+    background-color: #FFFFFF;
+    border-radius: 20px;
+
+    margin-top: 20%;
+}
+#mycourses{
+   text-align: center;
+}
+#mytees{
+    position: relative;
+    align-items: center;
+}
 table, tr, td{
     border: 1px solid black;
     border-collapse: collapse;
     color: black;
+}
+#yards{
+    color: #054E38;
 }
