@@ -1,28 +1,31 @@
 
 html{
     height: 100%;
+    font-family: 'Slabo 27px', serif;
 }
 body{
-    
-    background-color: #c9c7c7;
-}
-.card {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: auto;
-    width: 75%;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-    border-radius: 15px;
+    text-align: center;
+    background-color: #ffffff;
+}
+.courseBox{
+    margin-bottom: 20px;
+    border: 1px solid black;
+    border-radius: 5px;
+    height: 25%;
     background-color: #FFFFFF;
-  }
-    .card:hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-  }
-    .container {
-        padding: 2px 16px;
-  }
+}
+button{
+    background-color: #42a4f5;
+
+
+
+    width: 100%;
+}
+.card {
+}
 .courseBox{
     
 }

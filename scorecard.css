@@ -1,3 +1,8 @@
+html, body{
+    height: 75%;
+    width: auto;
+    font-family: 'Slabo 27px', serif;
+}
 body{
     background-image: url("golf.jpg");
     background-repeat: no-repeat;
@@ -5,23 +10,42 @@ body{
 }
 
 .everything{
-    background-color: #FFFFFF;
+    background-color: rgba(255,255,255, 0.9);
     border-radius: 20px;
-
-    margin-top: 20%;
+    margin-top: 10%;
+    margin-left: 2%;
+    margin-right: 2%;
+    height: auto;
+    width: auto;
 }
 #mycourses{
-   text-align: center;
+    margin-left: 50%;
+    padding-top: 20px;
+    text-decoration: underline;
 }
-#mytees{
-    position: relative;
-    align-items: center;
+select{
+    margin-left: 21%;
+    border-radius: 5px;
+    border: .5px solid black;
+    margin-bottom: 2px;
 }
 table, tr, td{
     border: 1px solid black;
     border-collapse: collapse;
     color: black;
+    height: auto;
+    background-color: #FFFFFF;
 }
 #yards{
     color: #054E38;
+}
+
+input{
+    width: 25%;
+    border-radius: 5px;
+    border: .5px solid black;
+    margin-left: 21%;
+    margin-bottom: 20px;
+    text-align: center;
+    margin-top: 2px;
 }

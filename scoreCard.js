@@ -8,6 +8,7 @@ let teetypes = 4;
 let totalYards=0;
 let totalPar = 0;
 let inYardage = 0;
+let inPar = 0;
 let course;
 let name;
 let playercounter=0;
@@ -101,15 +102,17 @@ function buildcol() {
 
 
                     $('#par').append(`<td id="pars${i+1}">${course.data.holes[i].teeBoxes[mytee].par}</td>`);
-                    if (i != 18 && i > 9) {
+                    
                         totalPar += parseInt(course.data.holes[i].teeBoxes[mytee].par);
-                    }
+                        inPar+=parseInt(course.data.holes[i].teeBoxes[mytee].par);
+
+
                     $('#hcp').append(`<td id="handicap${i+1}">${course.data.holes[i].teeBoxes[mytee].hcp}</td>`);
 
                 }
                 if (i == 18){
                     $('#yards').append(`<td id="yardsIn">${inYardage}</td>`);
-                    $('#par').append(`<td id="parsIn">${totalPar}</td>`);
+                    $('#par').append(`<td id="parsIn">${inPar}</td>`);
                     $('#hcp').append(`<td id="handicapIn"></td>`);
 
                 }
@@ -158,20 +161,20 @@ function buildholes() {
     $("#playerRow"+playercounter).append(`<td class='namebox' contenteditable='true' >${name}</td>`);
     for (let h = 0; h < 23; h++){
        if(h<9)
-        $('#playerRow'+playercounter).append(`<td class="minibox" style="margin-bottom: 3px">
-        <input id="${name}${h+1}"  type="text" onkeypress="isInputNumber(event)" style="height: 24px; width: 24px"></td>`);
+        $('#playerRow'+playercounter).append(`<td class="minibox">
+        <input id="${name}${h+1}"  type="text" onkeypress="isInputNumber(event)" style="width: 25px; height: 25px"></td>`);
         if(h>9 && h<19)
-            $('#playerRow'+playercounter).append(`<td   class="minibox" style="margin-bottom: 3px">
-        <input id="${name}${h}" type="text" onkeypress="isInputNumber(event)" style="height: 24px; width: 24px"></td>`);
+            $('#playerRow'+playercounter).append(`<td   class="minibox">
+        <input id="${name}${h}" type="text" onkeypress="isInputNumber(event)" style="width: 25px; height: 25px"></td>`);
 
         if (h == 9){
-            $('#playerRow'+playercounter).append(`<td id="${name}out" class="minibox" style="margin-bottom: 3px"><output></output></td>`);
+            $('#playerRow'+playercounter).append(`<td id="${name}out" class="minibox"><output></output></td>`);
         }
         if (h == 18){
-            $('#playerRow'+playercounter).append(`<td id="${name}${h}" class="minibox" style="margin-bottom: 3px"><output></output></td>`);
+            $('#playerRow'+playercounter).append(`<td id="${name}${h}" class="minibox"><output></output></td>`);
         }
         if (h >18){
-            $('#playerRow'+playercounter).append(`<td id="${name}${h}" class="minibox" style="margin-bottom: 3px"><output></output></td>`);
+            $('#playerRow'+playercounter).append(`<td id="${name}${h}" class="minibox"><output></output></td>`);
             playercounter++;
             break;
         }
