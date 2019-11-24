@@ -11,6 +11,7 @@ let inYardage = 0;
 let inPar = 0;
 let course;
 let name;
+let outYardage=0;
 let playercounter=0;
 //
 
@@ -102,7 +103,7 @@ function buildcol() {
 
 
                     $('#par').append(`<td id="pars${i+1}">${course.data.holes[i].teeBoxes[mytee].par}</td>`);
-                    
+
                         totalPar += parseInt(course.data.holes[i].teeBoxes[mytee].par);
                         inPar+=parseInt(course.data.holes[i].teeBoxes[mytee].par);
 
@@ -131,6 +132,9 @@ function buildcol() {
 
 
 function pageUpdater() {
+totalYards=0;
+outYardage=0;
+inYardage=0;
     mycourse=localStorage.getItem("courseid");
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -139,13 +143,21 @@ function pageUpdater() {
             allcourses = JSON.parse(this.responseText);
             for (i = 0; i < 18; i++){
                 $('#yards' + i).html(allcourses.data.holes[i].teeBoxes[mytee].yards);
+                totalYards+=parseInt(course.data.holes[i].teeBoxes[mytee].yards);
+                if(i<9){
+                    inYardage+=parseInt(course.data.holes[i].teeBoxes[mytee].yards);
+                }
+                else {outYardage+=parseInt(course.data.holes[i].teeBoxes[mytee].yards);}
                 $('#par' + i).html(allcourses.data.holes[i].teeBoxes[mytee].par);
                 $('#hcp' + i).html(allcourses.data.holes[i].teeBoxes[mytee].hcp);
             }
+            $("#yardsTotal").html(totalYards);
+            $("#yardsOut").html(outYardage);
+            $("#yardsIn").html(inYardage);
         }
     };
-    console.log(mycourse);
-    xhttp.open("GET", "https://golf-courses-api.herokuapp.com/courses/" + mycourse, true);
+
+    xhttp.open("GET", "https://golf-courses-api.herokuapp.com/courses/11819", true);
     xhttp.send();
 }
 function setTee(teeid){
@@ -162,27 +174,32 @@ function buildholes() {
     for (let h = 0; h < 23; h++){
        if(h<9)
         $('#playerRow'+playercounter).append(`<td class="minibox">
-        <input id="${name}${h+1}"  type="text" onkeypress="isInputNumber(event)" style="width: 25px; height: 25px"></td>`);
+        <input id="${name}${h+1}" class="score"  type="text" onchange="calc(this.value); this.readOnly=true" onkeypress="isInputNumber(event)" style="width: 25px; height: 25px"></td>`);
         if(h>9 && h<19)
             $('#playerRow'+playercounter).append(`<td   class="minibox">
-        <input id="${name}${h}" type="text" onkeypress="isInputNumber(event)" style="width: 25px; height: 25px"></td>`);
+        <input id="${name}${h}" class="score" type="text" onchange="calc(this.value)" onkeypress="isInputNumber(event)" style="width: 25px; height: 25px"></td>`);
 
         if (h == 9){
             $('#playerRow'+playercounter).append(`<td id="${name}out" class="minibox"><output></output></td>`);
         }
         if (h == 18){
-            $('#playerRow'+playercounter).append(`<td id="${name}${h}" class="minibox"><output></output></td>`);
+            $('#playerRow'+playercounter).append(`<td id="${name}${h}" class="minibox">0</td>`);
         }
         if (h >18){
-            $('#playerRow'+playercounter).append(`<td id="${name}${h}" class="minibox"><output></output></td>`);
+            $('#playerRow'+playercounter).append(`<td id="${name}${h}" class="minibox">0</td>`);
             playercounter++;
             break;
         }
     } 
     $('.minibox').keyup(function(){
-        console.log($(this).attr('id'));
+        console.log($(event));
     });
-}
+}$('.score').keyup(function (event) {
+    if (isInputNumber(event)){
+
+    }
+});
+
 
 function isInputNumber(evt) { //this function only allows players to input a number value for a score.
     var ch = String.fromCharCode(evt.which);
@@ -191,16 +208,15 @@ function isInputNumber(evt) { //this function only allows players to input a num
         evt.preventDefault();
         alert('Please enter a number value');
     }
+
 }
 
-// function calc() {
-//     let a = document.getElementById("box${i+1}").value;
-//     let b = document.getElementById("box${i+1}").value;
-//     let res = document.getElementById("resultbox");
-//
-//     let answer = Number(a) + Number(b);
-//     res.innerHTML = answer;
-// }
+function calc(value) {
+    let currentvalue=parseInt($('#'+name+'19').html());
+    if (currentvalue==NaN){currentvalue=0;}
+    currentvalue+=parseInt(value);
+    $('#'+name+'19').html(currentvalue);
+}
 
 function addplayer(event){
     if(event.which==13){

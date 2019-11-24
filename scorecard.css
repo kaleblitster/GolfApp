@@ -1,7 +1,11 @@
 html, body{
-    height: 75%;
-    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
     font-family: 'Slabo 27px', serif;
+
 }
 body{
     background-image: url("golf.jpg");
@@ -10,13 +14,14 @@ body{
 }
 
 .everything{
+    height: auto;
+    width: auto;
     background-color: rgba(255,255,255, 0.9);
     border-radius: 20px;
     margin-top: 10%;
-    margin-left: 2%;
-    margin-right: 2%;
-    height: auto;
-    width: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+
 }
 #mycourses{
     margin-left: 50%;
@@ -28,6 +33,7 @@ select{
     border-radius: 5px;
     border: .5px solid black;
     margin-bottom: 2px;
+    display: inline-block;
 }
 table, tr, td{
     border: 1px solid black;
@@ -41,11 +47,14 @@ table, tr, td{
 }
 
 input{
+
     width: 25%;
     border-radius: 5px;
     border: .5px solid black;
-    margin-left: 21%;
     margin-bottom: 20px;
     text-align: center;
     margin-top: 2px;
+    display: inline-block;
+    /*margin-right: 20%;*/
+
 }
