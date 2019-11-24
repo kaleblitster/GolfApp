@@ -130,7 +130,7 @@ function buildcol() {
 }
 
 
-let; 
+
 function pageUpdater() {
 totalYards=0;
 outYardage=0;
